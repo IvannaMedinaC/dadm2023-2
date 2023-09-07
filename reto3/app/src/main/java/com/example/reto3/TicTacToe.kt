@@ -1,13 +1,16 @@
 package com.example.reto3
-
+import android.R
+import android.os.Bundle
+import android.widget.Button
+import android.widget.TextView
 import java.util.InputMismatchException
 import java.util.Random
 import java.util.Scanner
 
 public class TicTacToe{
-    private val mBoard = charArrayOf('1', '2', '3', '4', '5', '6', '7', '8', '9')
+    val mBoard = charArrayOf('1', '2', '3', '4', '5', '6', '7', '8', '9')
     private var testBoard = charArrayOf('1', '2', '3', '4', '5', '6', '7', '8', '9')
-    private val BOARD_SIZE = 9
+    public val BOARD_SIZE = 9
     private val mRand: Random
     init {
         // Seed the random number generator
@@ -19,7 +22,7 @@ public class TicTacToe{
     }
 
     //Borra el tablero
-    public fun ClearBoard() {
+    public fun clearBoard() {
         for (i in 0 until BOARD_SIZE){
             mBoard[i]= OPEN_SPOT
         }
@@ -93,7 +96,7 @@ public class TicTacToe{
         return 1
     }
 
-    private fun computerMove(){
+    /*private fun computerMove(){
         var move: Int
         // First see if there's a move O can make to win
         for (i in 0 until BOARD_SIZE) {
@@ -126,9 +129,7 @@ public class TicTacToe{
         } while (mBoard[move] == HUMAN_PLAYER || mBoard[move] == COMPUTER_PLAYER)
         println("Computer is moving to " + (move + 1))
         mBoard[move] = COMPUTER_PLAYER
-    }
-
-
+    }*/
 
 
 
