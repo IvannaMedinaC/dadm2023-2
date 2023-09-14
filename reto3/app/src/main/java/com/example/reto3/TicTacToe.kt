@@ -10,7 +10,7 @@ import java.util.Scanner
 public class TicTacToe{
     val mBoard = charArrayOf('1', '2', '3', '4', '5', '6', '7', '8', '9')
     private var testBoard = charArrayOf('1', '2', '3', '4', '5', '6', '7', '8', '9')
-    public val BOARD_SIZE = 9
+    val BOARD_SIZE = 9
     private val mRand: Random
     init {
         // Seed the random number generator
@@ -21,6 +21,9 @@ public class TicTacToe{
         // Keep looping until someone wins or a tie
     }
 
+    public fun obtener_size(): Int {
+        return BOARD_SIZE
+    }
     //Borra el tablero
     public fun clearBoard() {
         for (i in 0 until BOARD_SIZE){
@@ -36,7 +39,7 @@ public class TicTacToe{
     }
 
     //Determina el movimiento del computador (o)
-    public fun getComputerMove(): Int{
+    /*public fun getComputerMove(): Int{
         var move: Int
         testBoard = mBoard
         // First see if there's a move O can make to win
@@ -66,37 +69,38 @@ public class TicTacToe{
             move = mRand.nextInt(BOARD_SIZE)
         } while (mBoard[move] == HUMAN_PLAYER || mBoard[move] == COMPUTER_PLAYER)
         return move
-    }
+    }*/
 
-    public fun checkForWinner(Board: CharArray): Int {
+    public fun checkForWinner(): Int {
 
         // Check horizontal wins
         for (i in 0..6 step 3) {
-            if (Board[i] == HUMAN_PLAYER && Board[i + 1] == HUMAN_PLAYER && Board[i + 2] == HUMAN_PLAYER) return 2
-            if (Board[i] == COMPUTER_PLAYER && Board[i + 1] == COMPUTER_PLAYER && Board[i + 2] == COMPUTER_PLAYER) return 3
+            if (mBoard[i] == HUMAN_PLAYER && mBoard[i + 1] == HUMAN_PLAYER && mBoard[i + 2] == HUMAN_PLAYER) return 2
+            if (mBoard[i] == COMPUTER_PLAYER && mBoard[i + 1] == COMPUTER_PLAYER && mBoard[i + 2] == COMPUTER_PLAYER) return 3
         }
 
         // Check vertical wins
         for (i in 0..2) {
-            if (Board[i] == HUMAN_PLAYER && Board[i + 3] == HUMAN_PLAYER && Board[i + 6] == HUMAN_PLAYER) return 2
-            if (Board[i] == COMPUTER_PLAYER && Board[i + 3] == COMPUTER_PLAYER && Board[i + 6] == COMPUTER_PLAYER) return 3
+            if (mBoard[i] == HUMAN_PLAYER && mBoard[i + 3] == HUMAN_PLAYER && mBoard[i + 6] == HUMAN_PLAYER) return 2
+            if (mBoard[i] == COMPUTER_PLAYER && mBoard[i + 3] == COMPUTER_PLAYER && mBoard[i + 6] == COMPUTER_PLAYER) return 3
         }
 
         // Check for diagonal wins
-        if (Board[0] == HUMAN_PLAYER && Board[4] == HUMAN_PLAYER && Board[8] == HUMAN_PLAYER || Board[2] == HUMAN_PLAYER && Board[4] == HUMAN_PLAYER && Board[6] == HUMAN_PLAYER) return 2
-        if (Board[0] == COMPUTER_PLAYER && Board[4] == COMPUTER_PLAYER && Board[8] == COMPUTER_PLAYER || Board[2] == COMPUTER_PLAYER && Board[4] == COMPUTER_PLAYER && Board[6] == COMPUTER_PLAYER) return 3
+        if (mBoard[0] == HUMAN_PLAYER && mBoard[4] == HUMAN_PLAYER && mBoard[8] == HUMAN_PLAYER || mBoard[2] == HUMAN_PLAYER && mBoard[4] == HUMAN_PLAYER && mBoard[6] == HUMAN_PLAYER) return 2
+        if (mBoard[0] == COMPUTER_PLAYER && mBoard[4] == COMPUTER_PLAYER && mBoard[8] == COMPUTER_PLAYER || mBoard[2] == COMPUTER_PLAYER && mBoard[4] == COMPUTER_PLAYER && mBoard[6] == COMPUTER_PLAYER) return 3
 
         // Check for tie
         for (i in 0 until BOARD_SIZE) {
             // If we find a number, then no one has won yet
-            if (Board[i] != HUMAN_PLAYER && Board[i] != COMPUTER_PLAYER) return 0
+            if (mBoard[i] != HUMAN_PLAYER && mBoard[i] != COMPUTER_PLAYER) return 0
         }
 
         // If we make it through the previous loop, all places are taken, so it's a tie
         return 1
     }
 
-    /*private fun computerMove(){
+
+     fun getcomputerMove(): Int{
         var move: Int
         // First see if there's a move O can make to win
         for (i in 0 until BOARD_SIZE) {
@@ -104,8 +108,7 @@ public class TicTacToe{
                 val curr = mBoard[i]
                 mBoard[i] = COMPUTER_PLAYER
                 if (checkForWinner() == 3) {
-                    println("Computer is moving to " + (i + 1))
-                    return
+                    return i
                 } else mBoard[i] = curr
             }
         }
@@ -118,7 +121,7 @@ public class TicTacToe{
                 if (checkForWinner() == 2) {
                     mBoard[i] = COMPUTER_PLAYER
                     println("Computer is moving to " + (i + 1))
-                    return
+                    return i
                 } else mBoard[i] = curr
             }
         }
@@ -127,9 +130,9 @@ public class TicTacToe{
         do {
             move = mRand.nextInt(BOARD_SIZE)
         } while (mBoard[move] == HUMAN_PLAYER || mBoard[move] == COMPUTER_PLAYER)
-        println("Computer is moving to " + (move + 1))
         mBoard[move] = COMPUTER_PLAYER
-    }*/
+        return move
+    }
 
 
 
@@ -137,6 +140,7 @@ public class TicTacToe{
         const val HUMAN_PLAYER = 'X'
         const val COMPUTER_PLAYER = 'O'
         const val OPEN_SPOT = ' '
+        const val SIZE_B = 9
         /**
          * @param args
          */
