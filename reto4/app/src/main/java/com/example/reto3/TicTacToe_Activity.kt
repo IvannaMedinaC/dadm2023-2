@@ -51,13 +51,14 @@ public class TicTacToe_Activity :Activity(){
         }
         // Human goes first
         mInfoTextView.setText("You go first.");
-        newButton.setOnClickListener { mGame.clearBoard()
+        /*newButton.setOnClickListener { mGame.clearBoard()
             for (i in 0 until mBoardButtons.size) {
             mBoardButtons[i]?.text = ""
             mBoardButtons[i]?.isEnabled = true
             mBoardButtons[i]?.setOnClickListener(ButtonClickListener(i))
 
-        }}
+        }
+        }*/
     }
 
     inner private class ButtonClickListener(var location: Int) : View.OnClickListener {
@@ -105,6 +106,18 @@ public class TicTacToe_Activity :Activity(){
                 0
             )
         ) else mBoardButtons[location]?.setTextColor(Color.rgb(200, 0, 0))
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        super.onCreateOptionsMenu(menu);
+        menu.add("New Game");
+        return true;
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        // Handle item selection
+        startNewGame();
+        return true;
     }
 
 }
