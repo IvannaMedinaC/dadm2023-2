@@ -1,17 +1,17 @@
 package com.example.reto3
-import android.R
-import android.os.Bundle
-import android.widget.Button
-import android.widget.TextView
-import java.util.InputMismatchException
 import java.util.Random
-import java.util.Scanner
+
 
 public class TicTacToe{
     val mBoard = charArrayOf('1', '2', '3', '4', '5', '6', '7', '8', '9')
     private var testBoard = charArrayOf('1', '2', '3', '4', '5', '6', '7', '8', '9')
     val BOARD_SIZE = 9
     private val mRand: Random
+    // The computer's difficulty levels
+    enum class DifficultyLevel { Easy, Harder, Expert };
+    // Current difficulty level
+    private var mDifficultyLevel = DifficultyLevel.Expert
+
     init {
         // Seed the random number generator
         mRand = Random()
@@ -21,10 +21,13 @@ public class TicTacToe{
         // Keep looping until someone wins or a tie
     }
 
-    public fun obtener_size(): Int {
-        return BOARD_SIZE
+    fun getDifficultyLevel(): DifficultyLevel? {
+        return mDifficultyLevel
     }
-    //Borra el tablero
+    fun setDifficultyLevel(difficultyLevel: DifficultyLevel) {
+        mDifficultyLevel = difficultyLevel
+    }
+
     public fun clearBoard() {
         for (i in 0 until BOARD_SIZE){
             mBoard[i]= OPEN_SPOT
@@ -37,39 +40,6 @@ public class TicTacToe{
             mBoard[location] = player
         }
     }
-
-    //Determina el movimiento del computador (o)
-    /*public fun getComputerMove(): Int{
-        var move: Int
-        testBoard = mBoard
-        // First see if there's a move O can make to win
-        for (i in 0 until BOARD_SIZE) {
-            if (mBoard[i] != HUMAN_PLAYER && mBoard[i] != COMPUTER_PLAYER) {
-                testBoard[i] = COMPUTER_PLAYER
-                if (checkForWinner(testBoard) == 3) {
-                    //println("Computer is moving to " + (i + 1))
-                    return i
-                }
-            }
-        }
-
-        // See if there's a move O can make to block X from winning
-        for (i in 0 until BOARD_SIZE) {
-            if (mBoard[i] != HUMAN_PLAYER && mBoard[i] != COMPUTER_PLAYER) {
-                testBoard[i] = HUMAN_PLAYER
-                if (checkForWinner(testBoard) == 2) {
-                    //println("Computer is moving to " + (i + 1))
-                    return i
-                }
-            }
-        }
-
-        // Generate random move
-        do {
-            move = mRand.nextInt(BOARD_SIZE)
-        } while (mBoard[move] == HUMAN_PLAYER || mBoard[move] == COMPUTER_PLAYER)
-        return move
-    }*/
 
     public fun checkForWinner(): Int {
 
@@ -99,9 +69,9 @@ public class TicTacToe{
         return 1
     }
 
-
-     fun getcomputerMove(): Int{
+    fun getcomputerMove(): Int{
         var move: Int
+        move = -1
         // First see if there's a move O can make to win
         for (i in 0 until BOARD_SIZE) {
             if (mBoard[i] != HUMAN_PLAYER && mBoard[i] != COMPUTER_PLAYER) {
@@ -133,7 +103,6 @@ public class TicTacToe{
         mBoard[move] = COMPUTER_PLAYER
         return move
     }
-
 
 
     companion object {

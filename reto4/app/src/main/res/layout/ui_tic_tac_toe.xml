@@ -4,6 +4,15 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:gravity="center_horizontal" >
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar" />
+
     <TableLayout
         android:id="@+id/play_grid" android:layout_width="fill_parent"
         android:layout_height="wrap_content" android:layout_marginTop="5dp" >
@@ -59,13 +68,5 @@
         android:layout_height="wrap_content"
         android:text="New Game" />
 
-    <menu xmlns:android="http://schemas.android.com/apk/res/android">
-        <item android:id="@+id/new_game"
-            android:icon="@drawable/ic_new_game"
-            android:title="@string/new_game"
-            android:showAsAction="ifRoom"/>
-        <item android:id="@+id/help"
-            android:icon="@drawable/ic_help"
-            android:title="@string/help" />
-    </menu>
+
 </LinearLayout>

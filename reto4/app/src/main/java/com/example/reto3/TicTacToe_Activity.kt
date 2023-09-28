@@ -7,10 +7,11 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Button
+import androidx.appcompat.widget.Toolbar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 
-public class TicTacToe_Activity :Activity(){
+public class TicTacToe_Activity :AppCompatActivity(){
 
     private lateinit var mGame: TicTacToe
     // Buttons making up the board
@@ -19,10 +20,14 @@ public class TicTacToe_Activity :Activity(){
     // Various text displayed
     private lateinit var mInfoTextView: TextView
     private lateinit var newButton: Button
+    val DIALOG_DIFFICULTY_ID = 0
+    val DIALOG_QUIT_ID = 1
     @Override
     override fun onCreate(savedInstanceState: Bundle?){
         super.onCreate(savedInstanceState)
         setContentView(R.layout.ui_tic_tac_toe)
+        val toolbar = findViewById<Toolbar>(R.id.toolbar)
+        setSupportActionBar(toolbar)
         mGame = TicTacToe()
         newButton = findViewById(R.id.button)
         mBoardButtons = arrayListOf<Button>()
@@ -109,15 +114,29 @@ public class TicTacToe_Activity :Activity(){
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        super.onCreateOptionsMenu(menu);
-        menu.add("New Game");
-        return true;
+        super.onCreateOptionsMenu(menu)
+        val inflater = menuInflater
+        inflater.inflate(R.menu.tictactoe_menu, menu)
+        return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        // Handle item selection
-        startNewGame();
-        return true;
+        when (item.itemId) {
+            R.id.new_game -> {
+                startNewGame()
+                return true
+            }
+            R.id.ai_difficulty -> {
+                showDialog(DIALOG_DIFFICULTY_ID)
+                return true
+            }
+
+            R.id.quit -> {
+                showDialog(DIALOG_QUIT_ID)
+                return true
+            }
+        }
+        return false
     }
 
 }
