@@ -37,7 +37,7 @@ public class TicTacToe_Activity :AppCompatActivity() {
         setSupportActionBar(toolbar)
 
         mGame = TicTacToe()
-        newButton = findViewById(R.id.button)
+        //newButton = findViewById(R.id.button)
         mBoardButtons = arrayListOf<Button>()
         mBoardButtons.add(findViewById<Button>(R.id.one))
         mBoardButtons.add(findViewById<Button>(R.id.two))
