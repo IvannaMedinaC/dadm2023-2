@@ -1,19 +1,24 @@
 package com.example.reto3
 
-import android.app.Activity
+import android.app.Dialog
 import android.graphics.Color
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Button
-import androidx.appcompat.widget.Toolbar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
+import android.app.AlertDialog;
+import android.widget.Toast
+import android.content.DialogInterface
 
-public class TicTacToe_Activity :AppCompatActivity(){
+
+public class TicTacToe_Activity :AppCompatActivity() {
 
     private lateinit var mGame: TicTacToe
+
     // Buttons making up the board
     private lateinit var mBoardButtons: ArrayList<Button>
 
@@ -22,12 +27,15 @@ public class TicTacToe_Activity :AppCompatActivity(){
     private lateinit var newButton: Button
     val DIALOG_DIFFICULTY_ID = 0
     val DIALOG_QUIT_ID = 1
+
     @Override
-    override fun onCreate(savedInstanceState: Bundle?){
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.ui_tic_tac_toe)
+
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
+
         mGame = TicTacToe()
         newButton = findViewById(R.id.button)
         mBoardButtons = arrayListOf<Button>()
@@ -83,23 +91,24 @@ public class TicTacToe_Activity :AppCompatActivity(){
                     mInfoTextView.setText("It's your turn.")
                 } else if (winner == 1) {
                     mInfoTextView.setText("It's a tie!")
-                    for(i in 0 until mBoardButtons.size){
-                        mBoardButtons[i].isEnabled =false
+                    for (i in 0 until mBoardButtons.size) {
+                        mBoardButtons[i].isEnabled = false
                     }
-                } else if(winner == 2) {
-                     mInfoTextView.setText("You won!")
-                    for(i in 0 until mBoardButtons.size){
-                        mBoardButtons[i].isEnabled =false
+                } else if (winner == 2) {
+                    mInfoTextView.setText("You won!")
+                    for (i in 0 until mBoardButtons.size) {
+                        mBoardButtons[i].isEnabled = false
                     }
                 } else if (winner == 3) {
                     mInfoTextView.setText("Android won!")
-                    for(i in 0 until mBoardButtons.size){
-                        mBoardButtons[i].isEnabled =false
+                    for (i in 0 until mBoardButtons.size) {
+                        mBoardButtons[i].isEnabled = false
                     }
                 }
             }
         }
     }
+
     private fun setMove(player: Char, location: Int) {
         mGame.setMove(player, location)
         mBoardButtons[location]?.isEnabled = false
@@ -126,6 +135,7 @@ public class TicTacToe_Activity :AppCompatActivity(){
                 startNewGame()
                 return true
             }
+
             R.id.ai_difficulty -> {
                 showDialog(DIALOG_DIFFICULTY_ID)
                 return true
@@ -139,5 +149,48 @@ public class TicTacToe_Activity :AppCompatActivity(){
         return false
     }
 
+    protected override fun onCreateDialog(id: Int): Dialog? {
+        var dialog: Dialog? = null
+        val builder = AlertDialog.Builder(this)
+
+        when (id) {
+            DIALOG_DIFFICULTY_ID -> {
+                builder.setTitle(R.string.difficulty_choose)
+                val levels = arrayOf(
+                    getString(R.string.difficulty_easy),
+                    getString(R.string.difficulty_harder),
+                    getString(R.string.difficulty_expert)
+                )
+                var selected: Int = 2
+                builder.setSingleChoiceItems(levels, selected) { dialog, item ->
+                    dialog.dismiss()
+                    if (item == 0) {
+                        mGame.setDifficultyLevel(TicTacToe.DifficultyLevel.Easy)
+                    } else if (item == 1) {
+                        mGame.setDifficultyLevel(TicTacToe.DifficultyLevel.Harder)
+                    } else if (item == 2) {
+                        mGame.setDifficultyLevel(TicTacToe.DifficultyLevel.Expert)
+                    }
+
+                    Toast.makeText(applicationContext, levels[item], Toast.LENGTH_SHORT).show()
+                }
+
+                dialog = builder.create()
+            }
+
+            DIALOG_QUIT_ID ->{
+                builder.setMessage(R.string.quit_question)
+                builder.setCancelable(false)
+                builder.setPositiveButton(R.string.yes) { dialog, id ->
+                    this@TicTacToe_Activity.finish()
+                }
+                builder.setNegativeButton(R.string.no, null)
+                dialog = builder.create()
+            }
+        }
+        return dialog!!
+    }
+
 }
+
 

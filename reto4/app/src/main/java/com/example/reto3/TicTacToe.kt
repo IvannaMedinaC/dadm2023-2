@@ -72,17 +72,57 @@ public class TicTacToe{
     fun getcomputerMove(): Int{
         var move: Int
         move = -1
+
+        if(mDifficultyLevel == DifficultyLevel.Easy)
+            move = getRandomMove();
+
+        else if(mDifficultyLevel == DifficultyLevel.Harder){
+            move = getWinningMove()
+            if(move == -1){
+                move = getRandomMove()
+            }
+        }
+        else if(mDifficultyLevel == DifficultyLevel.Expert){
+            move = getWinningMove()
+            if(move == -1){
+                move = getBlockingMove()
+            }
+            if(move == -1){
+                move = getRandomMove()
+            }
+        }
+        return move
+    }
+
+    fun getRandomMove():Int{
+        // Generate random move
+        var move: Int
+        do {
+            move = mRand.nextInt(BOARD_SIZE)
+        } while (mBoard[move] == HUMAN_PLAYER || mBoard[move] == COMPUTER_PLAYER)
+        mBoard[move] = COMPUTER_PLAYER
+        return move
+    }
+    fun getWinningMove():Int{
         // First see if there's a move O can make to win
+        var move: Int
+        move = -1
         for (i in 0 until BOARD_SIZE) {
             if (mBoard[i] != HUMAN_PLAYER && mBoard[i] != COMPUTER_PLAYER) {
                 val curr = mBoard[i]
                 mBoard[i] = COMPUTER_PLAYER
                 if (checkForWinner() == 3) {
-                    return i
-                } else mBoard[i] = curr
+                    move = i
+                    break
+                }
+                else mBoard[i] = curr
             }
         }
-
+        return move
+    }
+    fun getBlockingMove():Int{
+        var move:Int
+        move = -1
         // See if there's a move O can make to block X from winning
         for (i in 0 until BOARD_SIZE) {
             if (mBoard[i] != HUMAN_PLAYER && mBoard[i] != COMPUTER_PLAYER) {
@@ -90,20 +130,13 @@ public class TicTacToe{
                 mBoard[i] = HUMAN_PLAYER
                 if (checkForWinner() == 2) {
                     mBoard[i] = COMPUTER_PLAYER
-                    println("Computer is moving to " + (i + 1))
-                    return i
+                    move = i
+                    break
                 } else mBoard[i] = curr
             }
         }
-
-        // Generate random move
-        do {
-            move = mRand.nextInt(BOARD_SIZE)
-        } while (mBoard[move] == HUMAN_PLAYER || mBoard[move] == COMPUTER_PLAYER)
-        mBoard[move] = COMPUTER_PLAYER
         return move
     }
-
 
     companion object {
         const val HUMAN_PLAYER = 'X'
