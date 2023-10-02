@@ -31,7 +31,7 @@ public class TicTacToe_Activity :AppCompatActivity() {
     @Override
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.ui_tic_tac_toe)
+            setContentView(R.layout.ui_tic_tac_toe)
 
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
