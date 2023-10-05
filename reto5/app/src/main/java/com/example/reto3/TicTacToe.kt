@@ -6,6 +6,7 @@ public class TicTacToe{
     val mBoard = charArrayOf('1', '2', '3', '4', '5', '6', '7', '8', '9')
     private var testBoard = charArrayOf('1', '2', '3', '4', '5', '6', '7', '8', '9')
     val BOARD_SIZE = 9
+    var mov = false
     private val mRand: Random
     // The computer's difficulty levels
     enum class DifficultyLevel { Easy, Harder, Expert };
@@ -35,12 +36,18 @@ public class TicTacToe{
     }
 
     //Pone la x o la o en la casilla dada
-    public fun setMove (player: Char, location: Int) {
+    public fun setMove (player: Char, location: Int){
         if(mBoard[location]== OPEN_SPOT){
             mBoard[location] = player
+            mov = true
+        }else{
+            mov = false
         }
     }
 
+    public fun verifyMove (location: Int): Boolean{
+        return mBoard[location]== OPEN_SPOT
+    }
     public fun checkForWinner(): Int {
 
         // Check horizontal wins
@@ -136,6 +143,10 @@ public class TicTacToe{
             }
         }
         return move
+    }
+
+    fun getBoardOccupant(i : Int) : Char{
+        return mBoard[i]
     }
 
     companion object {

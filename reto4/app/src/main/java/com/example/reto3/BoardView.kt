@@ -9,7 +9,6 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.util.AttributeSet
 import android.view.View
-import edu.harding.tictactoe.BoardView
 
 class BoardView(context: Context, attrs: AttributeSet?, defStyle: Int) : View(context, attrs, defStyle) {
     init {
@@ -33,8 +32,8 @@ class BoardView(context: Context, attrs: AttributeSet?, defStyle: Int) : View(co
     }
 
     fun initialize() {
-        mHumanBitmap = BitmapFactory.decodeResource(resources, R.drawable.rocket)
-        mComputerBitmap = BitmapFactory.decodeResource(resources, R.drawable.planet)
+        mHumanBitmap = BitmapFactory.decodeResource(resources, R.drawable.rcocket)
+        mComputerBitmap = BitmapFactory.decodeResource(resources, R.mipmap.mars)
         val mPaint = Paint(Paint.ANTI_ALIAS_FLAG)
     }
 
