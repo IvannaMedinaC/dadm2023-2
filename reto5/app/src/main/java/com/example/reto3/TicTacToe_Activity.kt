@@ -1,9 +1,8 @@
 package com.example.reto3
 
-import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.app.Dialog
-import android.graphics.Color
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -20,8 +19,8 @@ public class TicTacToe_Activity :AppCompatActivity() {
     private lateinit var mGame: TicTacToe
     private lateinit var mBoardView: BoardView
 
-    // Buttons making up the board
-    private lateinit var mBoardButtons: ArrayList<Button>
+    lateinit var mHumanMediaPlayer: MediaPlayer
+    lateinit var mComputerMediaPlayer: MediaPlayer
 
     // Various text displayed
     private lateinit var mInfoTextView: TextView
@@ -29,7 +28,6 @@ public class TicTacToe_Activity :AppCompatActivity() {
     val DIALOG_DIFFICULTY_ID = 0
     val DIALOG_QUIT_ID = 1
 
-    @SuppressLint("ClickableViewAccessibility")
     @Override
     override fun onCreate(savedInstanceState: Bundle?) {
         mGame = TicTacToe()
@@ -52,13 +50,13 @@ public class TicTacToe_Activity :AppCompatActivity() {
     private fun startNewGame() {
         mGame.clearBoard()
         // Reset view
+        mBoardView.isEnabled = true
         mBoardView.isClickable = true
         mBoardView.invalidate()  //Redraw the board
         // Human goes first
         mInfoTextView.setText("You go first.");
     }
 
-    @SuppressLint("ClickableViewAccessibility")
     val mTouchListener = View.OnTouchListener { v, event ->
         // Determina qué celda se tocó
         val col = (event.x / mBoardView.getBoardCellWidth()).toInt()
@@ -67,25 +65,32 @@ public class TicTacToe_Activity :AppCompatActivity() {
 
         if (mGame.verifyMove(pos)) {
             setMove(TicTacToe.HUMAN_PLAYER, pos)
+            mHumanMediaPlayer.start()
             var winner: Int = 0
             winner = mGame.checkForWinner()
             if (winner == 0) {
                 mInfoTextView.setText("It's Android's turn.")
+                mBoardView.isEnabled = true
                 val move: Int = mGame.getcomputerMove()
                 setMove(TicTacToe.COMPUTER_PLAYER, move)
+                mComputerMediaPlayer.start()
                 winner = mGame.checkForWinner()
             }
             if (winner == 0) {
                 mInfoTextView.setText("It's your turn.")
+                mBoardView.isEnabled = true
             } else if (winner == 1) {
                 mInfoTextView.setText("It's a tie!")
                 mBoardView.isClickable = false
+                mBoardView.isEnabled = false
             } else if (winner == 2) {
                 mInfoTextView.setText("You won!")
                 mBoardView.isClickable = false
+                mBoardView.isEnabled = false
             } else if (winner == 3) {
                 mInfoTextView.setText("Android won!")
                 mBoardView.isClickable = false
+                mBoardView.isEnabled = false
             }
         }
         false
@@ -167,6 +172,18 @@ public class TicTacToe_Activity :AppCompatActivity() {
             }
         }
         return dialog!!
+    }
+
+    override fun onResume() {
+        super.onResume()
+        mHumanMediaPlayer = MediaPlayer.create(applicationContext, R.raw.planeta)
+        mComputerMediaPlayer = MediaPlayer.create(applicationContext, R.raw.planeta)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        mHumanMediaPlayer.release()
+        mComputerMediaPlayer.release()
     }
 
 }
