@@ -5,3 +5,4 @@ Repositorio para la entrega de las actividades de la asignatura.
 - [Reto 3](reto3): Juego triqui
 - [Reto 4](reto4): Menus y diálogos
 - [Reto 5](reto5): Gráficos y sonidos
+- [Reto 6](reto6): Cambio de Orientación y Guardando Estado
