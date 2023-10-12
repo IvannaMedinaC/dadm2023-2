@@ -28,4 +28,38 @@
         android:text="info"
         android:textSize="20dp" />
 
+    <TableRow
+        android:layout_width="294dp"
+        android:layout_height="75dp"
+        android:gravity="center">
+
+        <TextView
+            android:id="@+id/Human"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:gravity="center"
+            android:text="info"
+            android:textSize="20dp" />
+
+        <TextView
+            android:id="@+id/Computer"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:gravity="left"
+            android:text="info"
+            android:textSize="20dp" />
+    </TableRow>
+
+
+    <TextView
+        android:id="@+id/Ties"
+        android:layout_width="294dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:text="info"
+        android:textSize="20dp" />
+
 </LinearLayout>

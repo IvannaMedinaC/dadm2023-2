@@ -2,9 +2,11 @@ package com.example.reto3
 
 import android.app.AlertDialog
 import android.app.Dialog
+import android.content.SharedPreferences
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
@@ -14,8 +16,6 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import androidx.core.content.PackageManagerCompat.LOG_TAG
-import kotlin.math.log
 
 
 public class TicTacToe_Activity :AppCompatActivity() {
@@ -26,19 +26,33 @@ public class TicTacToe_Activity :AppCompatActivity() {
     private var mGameOver: Boolean = false
     private var mGoFirst: Char = 'H'
     var handler: Handler = Handler()
+    private lateinit var mPrefs: SharedPreferences
+
 
     lateinit var mHumanMediaPlayer: MediaPlayer
     lateinit var mComputerMediaPlayer: MediaPlayer
 
     // Various text displayed
     private lateinit var mInfoTextView: TextView
+    private lateinit var Human: TextView
+    private lateinit var Computer: TextView
+    private lateinit var Ties: TextView
+
     private lateinit var newButton: Button
     val DIALOG_DIFFICULTY_ID = 0
-    val DIALOG_QUIT_ID = 1
+    val DIALOG_RESET_ID = 1
+
+    var mHumanWins: Int = 0
+    var mComputerWins: Int = 0
+    var mTies: Int = 0
 
     @Override
     override fun onCreate(savedInstanceState: Bundle?) {
         mGame = TicTacToe()
+        mPrefs = getSharedPreferences("ttt_prefs", MODE_PRIVATE)
+        mHumanWins = mPrefs.getInt("mHumanWins", 0);
+        mComputerWins = mPrefs.getInt("mComputerWins", 0);
+        mTies = mPrefs.getInt("mTies", 0);
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.ui_tic_tac_toe)
@@ -51,6 +65,9 @@ public class TicTacToe_Activity :AppCompatActivity() {
         mBoardView.setGame(mGame)
 
         mInfoTextView = findViewById<TextView>(R.id.information)
+        Human = findViewById<TextView>(R.id.Human)
+        Computer = findViewById<TextView>(R.id.Computer)
+        Ties = findViewById<TextView>(R.id.Ties)
 
         if(savedInstanceState == null){
             startNewGame()
@@ -60,20 +77,20 @@ public class TicTacToe_Activity :AppCompatActivity() {
             mGame.setBoardState(savedInstanceState.getCharArray("board")!!)
             mGameOver = savedInstanceState.getBoolean("mGameOver")
             mInfoTextView.setText(savedInstanceState.getCharSequence("info"))
-            //mHumanWins = savedInstanceState.getInt("mHumanWins")
-            //mComputerWins = savedInstanceState.getInt("mComputerWins")
-            //mTies = savedInstanceState.getInt("mTies")
+            mHumanWins = savedInstanceState.getInt("mHumanWins")
+            mComputerWins = savedInstanceState.getInt("mComputerWins")
+            mTies = savedInstanceState.getInt("mTies")
             mGoFirst = savedInstanceState.getChar("mGoFirst")
         }
-        //displayScores()
+        displayScores()
 
     }
 
-    //private fun displayScores() {
-    //    mHumanScoreTextView.setText(Integer.toString(mHumanWins))
-    //    mComputerScoreTextView.setText(Integer.toString(mComputerWins))
-    //    mTieScoreTextView.setText(Integer.toString(mTies))
-    //}
+    private fun displayScores() {
+        Human.setText("Person: $mHumanWins")
+        Computer.setText("Computer: $mComputerWins")
+        Ties.setText("Ties: $mTies")
+    }
 
     private fun startNewGame() {
         mGame.clearBoard()
@@ -84,6 +101,9 @@ public class TicTacToe_Activity :AppCompatActivity() {
         mBoardView.invalidate()  //Redraw the board
         // Human goes first
 
+        Human.setText("Person: $mHumanWins")
+        Computer.setText("Computer: $mComputerWins")
+        Ties.setText("Ties: $mTies")
         if(mGoFirst == 'H'){
             mInfoTextView.setText("You go first")
         }
@@ -107,7 +127,10 @@ public class TicTacToe_Activity :AppCompatActivity() {
                 mBoardView.isEnabled = true
                 val move: Int = mGame.getcomputerMove()
                 setMove(TicTacToe.COMPUTER_PLAYER, move)
-                mComputerMediaPlayer.start()
+                val handler = Handler(Looper.getMainLooper())
+                handler.postDelayed({
+                    mComputerMediaPlayer.start()
+                },1000)
                 winner = mGame.checkForWinner()
             }
             if (winner == 0) {
@@ -119,18 +142,25 @@ public class TicTacToe_Activity :AppCompatActivity() {
                 mBoardView.isClickable = false
                 mBoardView.isEnabled = false
                 mGameOver = true
+                mTies ++
+
             } else if (winner == 2) {
                 mInfoTextView.setText("You won!")
                 mBoardView.isClickable = false
                 mBoardView.isEnabled = false
                 mGameOver = true
+                mHumanWins ++
             } else if (winner == 3) {
                 mInfoTextView.setText("Android won!")
                 mBoardView.isClickable = false
                 mBoardView.isEnabled = false
                 mGameOver = true
+                mComputerWins++
             }
         }
+        Human.setText("Person: $mHumanWins")
+        Computer.setText("Computer: $mComputerWins")
+        Ties.setText("Ties: $mTies")
         false
     }
 
@@ -162,8 +192,8 @@ public class TicTacToe_Activity :AppCompatActivity() {
                 return true
             }
 
-            R.id.quit -> {
-                showDialog(DIALOG_QUIT_ID)
+            R.id.Reset -> {
+                showDialog(DIALOG_RESET_ID)
                 return true
             }
         }
@@ -199,11 +229,14 @@ public class TicTacToe_Activity :AppCompatActivity() {
                 dialog = builder.create()
             }
 
-            DIALOG_QUIT_ID ->{
-                builder.setMessage(R.string.quit_question)
+            DIALOG_RESET_ID ->{
+                builder.setMessage(R.string.reset_question)
                 builder.setCancelable(false)
                 builder.setPositiveButton(R.string.yes) { dialog, id ->
-                    this@TicTacToe_Activity.finish()
+                    mHumanWins = 0
+                    mComputerWins = 0
+                    mTies = 0
+                    displayScores()
                 }
                 builder.setNegativeButton(R.string.no, null)
                 dialog = builder.create()
@@ -216,9 +249,9 @@ public class TicTacToe_Activity :AppCompatActivity() {
         super.onSaveInstanceState(outState)
         outState.putCharArray("board", mGame.getBoardState())
         outState.putBoolean("mGameOver", mGameOver)
-        //outState.putInt("mHumanWins", Integer.valueOf(mHumanWins))
-        //outState.putInt("mComputerWins", Integer.valueOf(mComputerWins))
-        //outState.putInt("mTies", Integer.valueOf(mTies))
+        outState.putInt("mHumanWins", Integer.valueOf(mHumanWins))
+        outState.putInt("mComputerWins", Integer.valueOf(mComputerWins))
+        outState.putInt("mTies", Integer.valueOf(mTies))
         outState.putCharSequence("info", mInfoTextView.text)
         outState.putChar("mGoFirst", mGoFirst)
     }
@@ -234,6 +267,15 @@ public class TicTacToe_Activity :AppCompatActivity() {
         mComputerMediaPlayer.release()
     }
 
+    override fun onStop() {
+        super.onStop()
+        // Save the current scores
+        val ed = mPrefs!!.edit()
+        ed.putInt("mHumanWins", mHumanWins)
+        ed.putInt("mComputerWins", mComputerWins)
+        ed.putInt("mTies", mTies)
+        ed.commit()
+    }
 }
 
 
